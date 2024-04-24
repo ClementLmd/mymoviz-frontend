@@ -6,21 +6,29 @@ import Movie from './Movie';
 import 'antd/dist/antd.css';
 import styles from '../styles/Home.module.css';
 
-const routeTmdb = 'https://mymoviz-backend-tau-nine.vercel.app/movies'
+const routeTmdb = 'http://localhost:3000/movies'
 
 function Home() {
   const [likedMovies, setLikedMovies] = useState([]);
   const [moviesFromApi, setMoviesFromApi] = useState([])
 
-  useEffect(()=>{
+  useEffect(() => {
     fetch(routeTmdb)
-    .then(response => response.json())
-    .then(data => {
-      console.log("data results :", data.results)
-      setMoviesFromApi(data.results)})
+      .then(response => response.json())
+      .then(data => {
+        console.log("data from fetch", data)
+        const dataFormatted = data.movies.map(movie=>({
+          title: movie.title,
+          overview: movie.overview,
+          poster: `https://image.tmdb.org/t/p/w500/${movie.poster_path}`,
+          voteAverage: movie.vote_average,
+          voteCount: movie.vote_count,
+        }))
+        setMoviesFromApi(dataFormatted)
+      })
   }, [])
 
-  console.log("moviesData : ", moviesFromApi)
+  console.log("movies from API : ", moviesFromApi)
 
   // Liked movies (inverse data flow)
   const updateLikedMovies = (movieTitle) => {
@@ -57,9 +65,10 @@ function Home() {
 
   const movies = moviesFromApi.map((data, i) => {
     const isLiked = likedMovies.some(movie => movie === data.title);
-    return <Movie key={i} updateLikedMovies={updateLikedMovies} isLiked={isLiked} title={data.title} overview={data.overview} poster={`https://image.tmdb.org/t/p/w500/${data.poster_path}`} voteAverage={data.vote_average} voteCount={data.vote_count} />;
+    return <Movie key={i} updateLikedMovies={updateLikedMovies} isLiked={isLiked} title={data.title} overview={data.overview} poster={data.poster} voteAverage={data.voteAverage} voteCount={data.voteCount} />;
   });
 
+  console.log("movies:",movies)
   return (
     <div className={styles.main}>
       <div className={styles.header}>
