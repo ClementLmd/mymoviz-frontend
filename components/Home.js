@@ -6,7 +6,7 @@ import Movie from './Movie';
 import 'antd/dist/antd.css';
 import styles from '../styles/Home.module.css';
 
-const routeTmdb = 'https://mymoviz-backend-tau-nine.vercel.app//movies'
+const routeTmdb = 'https://mymoviz-backend-tau-nine.vercel.app/movies'
 
 function Home() {
   const [likedMovies, setLikedMovies] = useState([]);
